@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Add Old Event</title>
+        <link href="css/styles.css" rel="stylesheet" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script> <!--remember to localize tis -->
+    </head>
+    <body class="bg-primary">
+        <div id="layoutAuthentication">
+            <div id="layoutAuthentication_content">
+                <main>
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-20">
+                                <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Add Old Event Details</h3></div>
+                                    <div class="card-body">
+                                        <form>
+                                            <!--Event Type Dropdown-->
+                                            <div class="form-floating mb-3">
+                                                <select class="form-control" id="eventType" aria-label="Event Type">
+                                                    <option value="" disabled selected>Select</option>
+                                                    <option value="retreat">Retreat</option>
+                                                    <option value="recollection02">Recollection 02</option>
+                                                    <option value="recollection01">Recollection 01</option>
+                                                </select>
+                                                <label for="eventType">Event Type</label>
+                                            </div>
+
+                                            <!--Date-->
+                                            <div class="row mb-3">
+                                                <div class="col-md-4">
+                                                    <div class="form-floating mb-3 mb-md-0">
+                                                        <select class="form-control" id="eventMonth">
+                                                            <option value="January">January</option>
+                                                            <option value="February">February</option>
+                                                            <option value="March">March</option>
+                                                            <option value="April">April</option>
+                                                            <option value="May">May</option>
+                                                            <option value="June">June</option>
+                                                            <option value="July">July</option>
+                                                            <option value="August">August</option>
+                                                            <option value="September">September</option>
+                                                            <option value="October">October</option>
+                                                            <option value="November">November</option>
+                                                            <option value="December">December</option>
+                                                        </select>
+                                                        <label for="eventMonth">Month</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-floating mb-3 mb-md-0">
+                                                        <input class="form-control" id="eventDay" type="number" placeholder="Day" min="1" max="31" />
+                                                        <label for="eventDay">Day</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-floating mb-3 mb-md-0">
+                                                        <input class="form-control" id="eventYear"  type="number" placeholder="Enter year" min="1900" />
+                                                        <label for="eventYear">Year</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!--Religion-->
+                                            <div class="form-floating mb-3">
+                                                <select class="form-control" id="religion" aria-label="Religion">
+                                                    <option value="" disabled selected>Select</option>
+                                                    <option value="Roman Catholic">Roman Catholic</option>
+                                                    <option value="Muslim">Muslim</option>
+                                                    <option value="Non-Christian">Non-Christian</option>
+                                                </select>
+                                                <label for="religion">Religion</label>
+                                            </div>
+
+                                            <!--Location/Venue-->
+                                            <div class="form-floating mb-3">
+                                                <input class="form-control" id="eventLocation" type="text" placeholder="Enter event location" />
+                                                <label for="eventLocation">Location</label>
+                                            </div>
+
+                                            <!--Courses Checkbox-->
+                                            <div class="mb-3">
+                                                <label for="courses" class="form-label">Courses: (BSCS, BSIT, BSNMCA)</label><br />
+                                                
+                                                <input class="form-control" id="eventLocation" type="text" placeholder="Enter Courses Involved ex. BSCS, BSIT, BSNMCA" />
+                                            
+                                                <br />
+                                            </div>
+
+
+
+                                            <!--- Testingg -->
+                                            <div class="row mb-3">
+                                                <!--- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+ -->
+                                                
+                                                <div class="container mt-5">
+                                                    <h2>Evaluation Form Results </h2>
+                                                    <div>
+                                                        <p>
+                                                            insert instructions here (still in construction :3)
+                                                        </p>
+                                                    </div>
+                                                    <form id="dynamicForm">
+                                                      <div id="textFieldsContainer" class="form-group">
+                                                        
+
+                                                        <!-- preset for 1st question -->
+                                                        
+                                                        <div class="input-group mb-5" id="fieldGroup-1">
+                                                            <!-- poor fair good verygood excelent -->
+
+                                                            <div class="input-group input-group-sm mb-3">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text" id="question-fieldGroup-1">Question 1 Details</span>
+                                                                </div>
+                                                                <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                                                            </div>
+
+
+
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text" id="poor-fieldGroup-1">Poor</span>
+                                                            </div>
+                                                            
+                                                            <input type="text" class="form-control" name="inputField[]" placeholder="">
+
+
+
+
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text" id="fair-fieldGroup-1">Fair</span>
+                                                            </div>
+                                                            
+                                                            <input type="text" class="form-control" name="inputField[]" placeholder="">
+
+
+
+
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text" id="good-fieldGroup-1">Good</span>
+                                                            </div>
+                                                            
+                                                            <input type="text" class="form-control" name="inputField[]" placeholder="">
+
+
+
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text" id="veryGood-fieldGroup-1">Very Good</span>
+                                                            </div>
+                                                            
+                                                            <input type="text" class="form-control" name="inputField[]" placeholder="">
+
+
+
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text" id="excellent-fieldGroup-1">Excellent</span>
+                                                            </div>
+                                                            
+                                                            <input type="text" class="form-control" name="inputField[]" placeholder="">
+
+  
+                                                            
+                                                          </div>
+
+                                                      </div>
+                                                      <button type="button" id="addField" class="btn btn-primary mb-3">Add Field</button>
+
+                                                      <!-- change type to submit when form is active.. for now it a button -->
+                                                      <button type="button" id="submit-details" class="btn btn-success">Submit</button>
+                                                    </form>
+                                                  </div>
+                                                  
+                                                  <!--using Jquerry, tis is a library btw nit a framework-->
+
+                                                  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+                                                  <script>
+                                                    
+                                                    $(document).ready(function() {
+                                                      let fieldCount = 1;
+                                                      
+                                                  
+                                                      // Add new field on button click
+                                                      $('#addField').click(function() {
+                                                        fieldCount++;
+
+                                                        //this is for the adding preset 
+
+                                                        $('#textFieldsContainer').append(`
+                                                          <div class="input-group mb-5" id="fieldGroup-${fieldCount}">
+                                                            <!-- poor fair good verygood excelent -->
+
+                                                            <div class="input-group input-group-sm mb-3">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text" id="question-fieldGroup-${fieldCount}">Question ${fieldCount} Details</span>
+                                                                </div>
+                                                                <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" >
+                                                            </div>
+
+
+
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text" id="inputGroup-sizing-sm">Poor</span>
+                                                            </div>
+                                                            
+                                                            <input type="text" class="form-control" name="inputField[]" placeholder="   ">
+
+
+
+
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text" id="inputGroup-sizing-sm">Fair</span>
+                                                            </div>
+                                                            
+                                                            <input type="text" class="form-control" name="inputField[]" placeholder="">
+
+
+
+
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text" id="inputGroup-sizing-sm">Good</span>
+                                                            </div>
+                                                            
+                                                            <input type="text" class="form-control" name="inputField[]" placeholder="">
+
+
+
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text" id="inputGroup-sizing-sm">Very Good</span>
+                                                            </div>
+                                                            
+                                                            <input type="text" class="form-control" name="inputField[]" placeholder="">
+
+
+
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text" id="inputGroup-sizing-sm">Excellent</span>
+                                                            </div>
+                                                            
+                                                            <input type="text" class="form-control" name="inputField[]" placeholder="">
+
+
+                                                            
+                                                            
+                                                            <div class="input-group-append">
+                                                              <button type="button" class="btn btn-danger removeField" id="remove-btn-${fieldCount}" data-id="${fieldCount}">Remove</button>
+                                                            </div>
+
+                                                            
+                                                          </div>
+                                                        `);
+                                                      });
+                                                  
+                                                      // Remove specific field on "Remove" button click
+                                                      $(document).on('click', '.removeField', function() {
+                                                        const id = $(this).data('id');
+                                                        
+                                                        let save_id = id; 
+
+                                                        console.log( "start given save fieldcount" + save_id + " and " + fieldCount);
+
+
+                                                        // re number their id & span content again
+                                                        for (let index = save_id + 1; index <= fieldCount ; index++) {
+                                                            
+                                                            console.log( "Forr loop given: " + save_id + " and " + fieldCount);
+
+
+
+                                                            
+                                                            console.log( "change inner HTML given: " + "question-fieldGroup-" + index);
+
+                                                            // changing content of span
+                                                            let spanE = document.getElementById("question-fieldGroup-" + index);
+                                                            spanE.innerHTML = "Question " + (index - 1) + " Details" ;
+
+
+                                                            console.log( "change span id given: " + "question-fieldGroup-" + index);
+                                                            // changing id
+                                                            let fieldGroupDiv = document.getElementById("question-fieldGroup-" + index);
+                                                            fieldGroupDiv.id = "question-fieldGroup-" + (index - 1);
+
+
+
+                                                            
+                                                        }
+
+                                                        console.log("removing fieldGroup-" + id);
+                                                        $(`#fieldGroup-${id}`).remove();
+
+
+                                                        for (let index = save_id + 1; index <= fieldCount ; index++) {
+                                                            
+                                                            console.log( "Forr loop given: " + save_id + " and " + fieldCount);
+
+
+                                                            console.log( "change fieldGroup id given: " + "fieldGroup-" + index);
+                                                            // changing id of field group
+                                                            let fieldGroupDiv = document.getElementById("fieldGroup-" + index);
+                                                            fieldGroupDiv.id = "fieldGroup-" + (index - 1);
+
+
+                                                            
+                                                            // change id of remove btn and data id
+                                                            let removeBTN = document.getElementById("remove-btn-" + index);
+                                                            
+
+                                                            console.log( "change remove-btn datID given: " + "remove-btn-" + index);
+                                                            //change data id of remove btn
+                                                            $('#remove-btn-' + index).attr('data-id',(index - 1));
+
+
+                                                            console.log( "change remove-btn id given: " + "remove-btn-" + index);
+                                                            // change id of remove btn 
+                                                            removeBTN.id = "remove-btn-" + (index - 1);
+
+
+
+                                                            
+                                                        }
+
+
+
+                                                        fieldCount--;
+
+                                                        console.log( "ending output save field count" + save_id + " and " + fieldCount);
+
+
+
+
+                                                      });
+
+
+                                                      $('#submit-details').click(function() {
+
+                                                        console.log("bringing to old event details page");
+
+                                                        // rewire this back to the Event List when Eventlist ready, for now we show case le event details
+                                                        window.location.href = "old-event-details.html";
+
+
+                                                      });
+
+
+
+
+
+
+                                                    });
+
+                                                       //Get the current year
+                                                         const currentYear = new Date().getFullYear();
+    
+                                                        // Set the input's value to the current year by default
+                                                        const yearInput = document.getElementById('eventYear');
+                                                        yearInput.value = currentYear;
+                                                  </script>
+
+                                            </div>
+                                            <!--- Testingg -->
+
+                                            <div class="mt-4 mb-0">
+                                                <!---<div class="d-grid"><a class="btn btn-primary btn-block" href="login.html">Create Account</a></div> -->
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="card-footer text-center py-3">
+                                        <div class="small"><a href="main-page.php">Back to dashbaord</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+            <div id="layoutAuthentication_footer">
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid px-4">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                            <div>
+                                <a href="#">Privacy Policy</a>
+                                &middot;
+                                <a href="#">Terms &amp; Conditions</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="js/scripts.js"></script>
+    </body>
+</html>
