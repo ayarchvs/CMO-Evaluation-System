@@ -141,7 +141,6 @@
                                     <th>Name</th>
                                     <th>Course</th>
                                     <th>Gender</th>
-                                    <th>Age</th>
                                     <th>Process</th>
                                     <th>Anchorperson</th>
                                     <th>Schedules</th>
@@ -151,14 +150,11 @@
                                 </tr>
                             </thead>
                             <tfoot>
-
-                                <!-- The headers, should be same as thead -->
                                 <tr>
                                     <th>Student ID</th>
                                     <th>Name</th>
                                     <th>Course</th>
                                     <th>Gender</th>
-                                    <th>Age</th>
                                     <th>Process</th>
                                     <th>Anchorperson</th>
                                     <th>Schedules</th>
@@ -179,7 +175,6 @@
                                         $name = $row['lastname'] . ", " . $row['firstname'];
                                         $course = $row['course'];
                                         $gender = $row['gender'];
-                                        $age = $row['age'];
                                         $L1 = $row['L1'];
                                         $L2 = $row['L2'];
                                         $L3 = $row['L3'];
@@ -194,7 +189,6 @@
                                                 <td>'.$name.'</td>
                                                 <td>'.$course.'</td>
                                                 <td>'.$gender.'</td>
-                                                <td>'.$age.'</td>
                                                 <td>'.$L1.'</td>
                                                 <td>'.$L2.'</td>
                                                 <td>'.$L3.'</td>

@@ -85,47 +85,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $lastName = $row[2]; 
                         $firstName = $row[3];  
                         $studentID = $row[4]; 
-                        $course = $row[5]; 
-                        $gender = $row[6]; 
-                        $age = $row[7]; 
-                        $venue = $row[8]; 
-                        $date = $row[9];
-        
-                        $formattedDate = date("Y-m-d", strtotime($date));
-                        
-                        $L1 = $row[12];
+                        $course = $row[6]; 
+                        $venue = $row[7]; 
+                        $gender = $row[8]; 
+                                               
+                        $L1 = $row[11];
                         $L2 = $row[13];
-                        $L3 = $row[14];
-                        $L4 = $row[15];
-                        $L5 = $row[16];
-                        $L6 = $row[17];
+                        $L3 = $row[15];
+                        $L4 = $row[17];
+                        $L5 = $row[19];
+                        $L6 = $row[21];
         
                         $sql = "INSERT INTO new_events 
                         (
+                        lastname,
+                        firstname,
                         student_id,
-                        Event_ID,
-                        lastname, 
-                        firstname, 
-                        course, 
+                        course,
+                        venue,  
                         gender, 
-                        age, 
-                        venue,
-                        `date`,
+                        Event_ID,
                         L1, L2, L3, L4, L5, L6
                         ) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                         $stmt = $conn->prepare($sql);
                         $stmt->bind_param(
-                            "iissssissiiiiii", 
-                            $studentID, 
-                            $event_id,
+                            "ssisssiiiiiii", 
                             $lastName, 
-                            $firstName, 
+                            $firstName,
+                            $studentID, 
                             $course, 
-                            $gender, 
-                            $age, 
-                            $venue,
-                            $formattedDate,
+                            $venue, 
+                            $gender,
+                            $event_id,
                             $L1, $L2, $L3, $L4, $L5, $L6
                         );
                         $stmt->execute();
