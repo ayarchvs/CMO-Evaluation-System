@@ -1,7 +1,24 @@
 <?php
 session_start();
 $username = $_SESSION['username'];
+$upperCase = strtoupper($username);
 $staffID = $_SESSION['Staff_ID'];
+$admin = $_SESSION['is_admin'];
+
+$adminPermission = '';
+if ($admin != 0) {
+    $adminPermission = <<<ADMINPERMISSION
+    <a class="nav-link" href="staff-list.php">
+        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+        Staff List
+    </a>
+    <a class="nav-link" href="register.php">
+        <div class="sb-nav-link-icon"><i class="fas fa-user-plus"></i></div>
+        Register Staff
+    </a>
+    ADMINPERMISSION;
+}
+
 $htmlContent = <<<HTML
             <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
                 <!-- Navbar Brand-->
@@ -10,9 +27,10 @@ $htmlContent = <<<HTML
                 <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
                     
                 <div class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-                    <div style="color:white;">
-                        <div class="small">Hello, User</div>
-                        $username
+                    <div style="color:white; ">
+                        <a class="nav-link">
+                            Welcome $upperCase!
+                        </a>
                     </div>
                 </div>
                 <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
@@ -31,7 +49,6 @@ $htmlContent = <<<HTML
                     <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                         <div class="sb-sidenav-menu">
                             <div class="nav">
-
                                 <a class="nav-link" href="main-page.php">
                                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                     Dashboard
@@ -42,15 +59,7 @@ $htmlContent = <<<HTML
                                     Add Event
                                 </a>
 
-                                <a class="nav-link" href="staff-list.php">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                    Staff List
-                                </a>
-
-                                <a class="nav-link" href="register.php">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                    Register Staff
-                                </a>
+                                {$adminPermission}
 
                             </div>
                         </div>
@@ -124,7 +133,7 @@ $htmlContent = <<<HTML
                             </div>
                         </div>
                     </div>
-                </div>s
+                </div>
 
                 <script src="js/staff-options.js"></script>
             HTML;
