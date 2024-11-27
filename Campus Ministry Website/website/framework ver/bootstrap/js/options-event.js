@@ -80,10 +80,9 @@ $(document).ready(function() {
         $('.delete-btn').on('click', function() {
             const eventId = $(this).data('id');  // Get the data-id of le clicked button
             console.log("Clicked delete Btn: ", eventId);
-        
+            
             // Show confirmation dialog to person
             const isConfirmed = confirm("Are you sure you want to delete this event?");
-
             // If (Yes)
             if (isConfirmed) {
                 // Send AJAX req to delete event from database

@@ -45,12 +45,7 @@ unset($_SESSION['login_email']);
                                                 <input class="form-control" id="inputPassword" name="password" type="password" placeholder="Password" required />
                                                 <label for="inputPassword">Password</label>
                                             </div>
-                                            <div class="form-check mb-3">
-                                                <input class="form-check-input" id="inputRememberPassword" type="checkbox" value="" />
-                                                <label class="form-check-label" for="inputRememberPassword">Remember Password</label>
-                                            </div>
-                                            <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <a class="small" href="password.php">Forgot Password?</a>
+                                            <div class="d-flex align-items-center justify-content-center mt-4 mb-0">
                                                 <input type="submit" class="btn btn-primary" name="submit" value="Login">
                                             </div>
                                         </form>
