@@ -1,6 +1,5 @@
 <?php
 
-
 include "../config/config.php";  // Include DB connection
 
 if (isset($_POST['staffId'], $_POST['staffFirstName'], $_POST['staffLastName'], $_POST['staffType'], $_POST['staffEmail'])) {    
@@ -33,6 +32,9 @@ if (isset($_POST['staffId'], $_POST['staffFirstName'], $_POST['staffLastName'], 
         // If query fails, return the error message in JSON
         echo json_encode(['status' => 'error', 'message' => $conn->error]);
     } else {
+        session_start();  // Ensure session is started
+        $_SESSION['username'] = $Name;
+
         echo json_encode(['status' => 'success']);
     }
 } else {
