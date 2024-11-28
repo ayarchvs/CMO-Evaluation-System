@@ -95,6 +95,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $L4 = $row[17];
                         $L5 = $row[19];
                         $L6 = $row[21];
+                        $C1 = $row[23];
+                        $C2 = $row[25];
+                        $C3 = $row[27];
+                        $C4 = $row[29];
+                        $C5 = $row[31];
+                        $C6 = $row[33];
+                        $C7 = $row[35];
+                        $C8 = $row[37];
         
                         $sql = "INSERT INTO new_events 
                         (
@@ -105,12 +113,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         venue,  
                         gender, 
                         Event_ID,
-                        L1, L2, L3, L4, L5, L6
+                        L1, L2, L3, L4, L5, L6,
+                        C1, C2, C3, C4, C5, C6, C7, C8
                         ) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                         $stmt = $conn->prepare($sql);
                         $stmt->bind_param(
-                            "ssisssiiiiiii", 
+                            "ssisssiiiiiiiiiiiiiii", 
                             $lastName, 
                             $firstName,
                             $studentID, 
@@ -118,7 +127,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $venue, 
                             $gender,
                             $event_id,
-                            $L1, $L2, $L3, $L4, $L5, $L6
+                            $L1, $L2, $L3, $L4, $L5, $L6,
+                            $C1, $C2, $C3, $C4, $C5, $C6, $C7, $C8
                         );
                         $stmt->execute();
                     }
