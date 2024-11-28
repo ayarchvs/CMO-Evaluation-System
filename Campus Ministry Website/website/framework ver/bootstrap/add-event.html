@@ -9,6 +9,81 @@
         <title>Add Event</title>
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+        <style>
+             body {
+            background-color: #0a1f44;
+            background-image: url('assets/img/login.png');
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, transparent 0%, #0a1f44 70%);
+        }
+
+        h1 {
+        font-size: 2.5rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    p {
+        font-size: 1.1rem;
+        font-weight: 300;
+        margin-bottom: 2rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        color: black;
+    }
+
+        .login-container {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+        .card {
+            border-radius: 10px;
+        }
+        .card-body{
+            width: 100vh;
+        }
+        .card-header{
+            font-family: Montserrat;
+            font-weight: bolder;
+        }
+        .btn-primary {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #000;
+            height: 48px;
+            font-size: 18px;
+            font-weight: 500;
+            width: 20vh;
+            margin-bottom: 2vh;
+            font-family: Montserrat;
+            font-weight: bold;
+        }   
+        </style>
     </head>
     <body class="bg-primary">
         <div id="layoutAuthentication">
@@ -54,7 +129,7 @@
 
                                             <div class="form-floating mb-3">
                                                 <input class="form-control" id="eventCourse" name="eventCourse" type="text" placeholder="Enter event Course" required />
-                                                <label for="eventLocation">Course</label>
+                                                <label for="eventCourse">Course</label>
                                             </div>
 
                                             <div class="form-floating mb-3">
@@ -91,20 +166,6 @@
                         </div>
                     </div>
                 </main>
-            </div>
-            <div id="layoutAuthentication_footer">
-                <footer class="py-4 bg-light mt-auto">
-                    <div class="container-fluid px-4">
-                        <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                            <div>
-                                <a href="#">Privacy Policy</a>
-                                &middot;
-                                <a href="#">Terms & Conditions</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
