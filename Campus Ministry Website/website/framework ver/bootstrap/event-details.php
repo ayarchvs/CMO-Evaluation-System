@@ -263,7 +263,7 @@ include "config/config.php";
 
                     <!-- Bar Chart Container for Logistics -->
                     <div>
-                        <canvas id="myChart1"></canvas>
+                        <canvas id="myChart1" height =400vh></canvas>
                     </div>
 
                 </div>
@@ -325,7 +325,7 @@ include "config/config.php";
 
                     <!-- Bar Chart Container -->
                     <div>
-                        <canvas id="myChart2"></canvas>
+                        <canvas id="myChart2" height = 400vh    ></canvas>
                     </div>
                 </div>
 
@@ -512,13 +512,6 @@ include "config/config.php";
                                         }
                                     }
                                 },
-                                animation: {
-                                    duration: 0 // general animation time
-                                },
-                                hover: {
-                                    animationDuration: 0 // duration of animations when hovering an item
-                                },
-                                responsiveAnimationDuration: 0 // animation duration after a resize
                             }
                         });
                     }
