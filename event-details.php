@@ -17,6 +17,17 @@ include "config/config.php";
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 
+    <style>
+        .chart-container {
+            margin-bottom: 40px;
+        }
+
+        .chart-title {
+            text-align: center;
+            font-size: 24px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 
 <body class="sb-nav-fixed">
@@ -245,8 +256,9 @@ include "config/config.php";
                     </div>
 
                     <!-- Bar Chart Container for Logistics -->
-                    <div>
-                        <canvas id="myChart1"></canvas>
+                    <div class="chart-container">
+                        <h2 class="chart-title">Logistics</h2>
+                        <canvas id="myChart1" width="300" height="100" style="padding-left: 3vh; padding-right: 3vh; "></canvas>
                     </div>
 
                 </div>
@@ -302,149 +314,83 @@ include "config/config.php";
                                     echo "<tr><td colspan='6'>No data found for $column</td></tr>";
                                 }
                             }
-                            ?>  
+                            ?>
                         </table>
                     </div>
 
                     <!-- Bar Chart Container -->
-                    <div>
-                        <canvas id="myChart2"></canvas>
+                    <div class="chart-container">
+                        <h2 class="chart-title">Content</h2>
+                        <canvas id="myChart2" width="300" height="100" style="padding-left: 3vh; padding-right: 3vh; "></canvas>
+                    </div>
+                </div>
+
+                <?php
+                    $sql = "SELECT course,
+                                   AVG(L1) as avg_L1, AVG(L2) as avg_L2, AVG(L3) as avg_L3, AVG(L4) as avg_L4,
+                                   AVG(L5) as avg_L5, AVG(L6) as avg_L6,
+                                   AVG(C1) as avg_C1, AVG(C2) as avg_C2, AVG(C3) as avg_C3, AVG(C4) as avg_C4, 
+                                   AVG(C5) as avg_C5, AVG(C6) as avg_C6, AVG(C7) as avg_C7, AVG(C8) as avg_C8
+                            FROM new_events
+                            WHERE Event_ID = $eventId
+                            GROUP BY course;";
+                    $result = $conn->query($sql);
+
+                    $data = []; // Initialize an empty array to store the results
+
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            $data[] = [
+                                'course'   => $row['course'],
+                                'avg_L1'   => $row['avg_L1'],
+                                'avg_L2'   => $row['avg_L2'],
+                                'avg_L3'   => $row['avg_L3'],
+                                'avg_L4'   => $row['avg_L4'],
+                                'avg_L5'   => $row['avg_L5'],
+                                'avg_L6'   => $row['avg_L6'],
+                                'avg_C1'   => $row['avg_C1'],
+                                'avg_C2'   => $row['avg_C2'],
+                                'avg_C3'   => $row['avg_C3'],
+                                'avg_C4'   => $row['avg_C4'],
+                                'avg_C5'   => $row['avg_C5'],
+                                'avg_C6'   => $row['avg_C6'],
+                                'avg_C7'   => $row['avg_C7'],
+                                'avg_C8'   => $row['avg_C8']
+                            ];
+                        }
+                    } else {
+                        echo "No results found.";
+                    }
+                    $courses = array_map(function($item) { return $item['course']; }, $data);
+                    $avg_L1 = array_map(function($item) { return $item['avg_L1']; }, $data);
+                    $avg_L2 = array_map(function($item) { return $item['avg_L2']; }, $data);
+                    $avg_L3 = array_map(function($item) { return $item['avg_L3']; }, $data);
+                    $avg_L4 = array_map(function($item) { return $item['avg_L4']; }, $data);
+                    $avg_L5 = array_map(function($item) { return $item['avg_L5']; }, $data);
+                    $avg_L6 = array_map(function($item) { return $item['avg_L6']; }, $data);
+                    $avg_C1 = array_map(function($item) { return $item['avg_C1']; }, $data);
+                    $avg_C2 = array_map(function($item) { return $item['avg_C2']; }, $data);
+                    $avg_C3 = array_map(function($item) { return $item['avg_C3']; }, $data);
+                    $avg_C4 = array_map(function($item) { return $item['avg_C4']; }, $data);
+                    $avg_C5 = array_map(function($item) { return $item['avg_C5']; }, $data);
+                    $avg_C6 = array_map(function($item) { return $item['avg_C6']; }, $data);
+                    $avg_C7 = array_map(function($item) { return $item['avg_C7']; }, $data);
+                    $avg_C8 = array_map(function($item) { return $item['avg_C8']; }, $data);
+                ?>
+                
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table me-1"></i>
+                        COURSES AVERAGE RATING
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="myChart3" width="300" height="100" style="padding-left: 3vh; padding-right: 3vh; "></canvas>
                     </div>
                 </div>
 
                 <script>
-                    function extractTableData(id) {
-
-                        const labels = [];
-                        const poorData = [];
-                        const fairData = [];
-                        const goodData = [];
-                        const veryGoodData = [];
-                        const excellentData = [];
-
-                        const rows = document.querySelectorAll(id);
-
-                        rows.forEach(row => {
-                            const value = row.cells[0].textContent;
-
-                            // Extract the ratings for each column (Poor, Fair, etc.)
-                            const poor = parseInt(row.cells[1].textContent) || 0;
-                            const fair = parseInt(row.cells[2].textContent) || 0;
-                            const good = parseInt(row.cells[3].textContent) || 0;
-                            const veryGood = parseInt(row.cells[4].textContent) || 0;
-                            const excellent = parseInt(row.cells[5].textContent) || 0;
-
-                            labels.push(value);
-                            poorData.push(poor);
-                            fairData.push(fair);
-                            goodData.push(good);
-                            veryGoodData.push(veryGood);
-                            excellentData.push(excellent);
-                        });
-
-                        return {
-                            labels,
-                            poorData,
-                            fairData,
-                            goodData,
-                            veryGoodData,
-                            excellentData
-                        };
-                    }
-
-                    // Create Bar Chart
-                    function createBarChart(data, chart) {
-                        const ctx = document.getElementById(chart).getContext('2d');
-                        new Chart(ctx, {
-                            type: 'bar',
-                            data: {
-                                labels: data.labels,
-                                datasets: [
-                                    {
-                                        label: 'Poor (1)',
-                                        data: data.poorData,
-                                        backgroundColor: 'rgba(233, 30, 99, 0.8)' // Deep pink
-                                    },
-                                    {
-                                        label: 'Fair (2)',
-                                        data: data.fairData,
-                                        backgroundColor: 'rgba(33, 150, 243, 0.8)' // Light blue
-                                    },
-                                    {
-                                        label: 'Good (3)',
-                                        data: data.goodData,
-                                        backgroundColor: 'rgba(255, 193, 7, 0.8)' // Amber
-                                    },
-                                    {
-                                        label: 'Very Good (4)',
-                                        data: data.veryGoodData,
-                                        backgroundColor: 'rgba(0, 200, 83, 0.8)' // Green accent
-                                    },
-                                    {
-                                        label: 'Excellent (5)',
-                                        data: data.excellentData,
-                                        backgroundColor: 'rgba(156, 39, 176, 0.8)' // Purple
-                                    }
-                                ]
-                            },
-                            options: {
-                                responsive: true,
-                                plugins: {
-                                    tooltip: {
-                                        callbacks: {
-                                            label: function (context) {
-                                                return `${context.dataset.label}: ${context.raw} votes`;
-                                            }
-                                        }
-                                    },
-                                    legend: {
-                                        position: 'top',
-                                        labels: {
-                                            font: {
-                                                size: 14 // Modern readable font size
-                                            },
-                                            color: '#333' // Dark grey for text
-                                        }
-                                    }
-                                },
-                                scales: {
-                                    yAxes: [{
-                                        ticks: {
-                                            precision: 0
-                                        }
-                                    }],
-                                    x: {
-                                        stacked: true,
-                                        grid: {
-                                            display: false // Cleaner grid lines
-                                        },
-                                        ticks: {
-                                            color: '#666', // Subtle grey for axis labels
-                                            font: {
-                                                size: 12
-                                            },
-                                        }
-                                    },
-                                    y: {
-                                        stacked: true,
-                                        beginAtZero: true,
-                                        grid: {
-                                            color: 'rgba(200, 200, 200, 0.3)' // Light grey grid lines
-                                        },
-                                        ticks: {
-                                            color: '#666', // Subtle grey for axis labels
-                                            font: {
-                                                size: 12
-                                            },
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                    }
-
-
-                    window.onload = function() {
+                    // Wait for the DOM to load
+                    document.addEventListener('DOMContentLoaded', function() {
                         const logistics = '#datatablesSimple3 tbody tr';
                         const content = '#datatablesSimple4 tbody tr';
 
@@ -455,18 +401,179 @@ include "config/config.php";
                         // Create Bar Chart
                         createBarChart(chartDataLogis, logischart);
                         createBarChart(chartDataContent, contentchart);
-                    };
+                        AverageBarChart();
+                    });
 
+                    // Common data extraction function
+                    function extractTableData(id) {
+                        const tableRows = document.querySelectorAll(id);
+
+                        const data = {
+                            labels: [],
+                            voted_1: [],
+                            voted_2: [],
+                            voted_3: [],
+                            voted_4: [],
+                            voted_5: []
+                        };
+
+                        tableRows.forEach(row => {
+                            const cells = row.querySelectorAll('td');
+
+                            data.labels.push(cells[0].textContent); // Category (e.g., Process, Venue)
+                            data.voted_1.push(parseInt(cells[1].textContent)); // Votes for "Poor"
+                            data.voted_2.push(parseInt(cells[2].textContent)); // Votes for "Fair"
+                            data.voted_3.push(parseInt(cells[3].textContent)); // Votes for "Good"
+                            data.voted_4.push(parseInt(cells[4].textContent)); // Votes for "Very Good"
+                            data.voted_5.push(parseInt(cells[5].textContent)); // Votes for "Excellent"
+                        });
+
+                        return data;
+                    }
+
+                    // Create Bar Chart
+                    function createBarChart(data, chart) {
+                        const ctx = document.getElementById(chart).getContext('2d');
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: data.labels,
+                                datasets: [{
+                                        label: 'Poor (1)',
+                                        data: data.voted_1,
+                                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                        borderColor: 'rgba(255, 99, 132, 1)',
+                                        borderWidth: 1
+                                    },
+                                    {
+                                        label: 'Fair (2)',
+                                        data: data.voted_2,
+                                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                        borderColor: 'rgba(54, 162, 235, 1)',
+                                        borderWidth: 1
+                                    },
+                                    {
+                                        label: 'Good (3)',
+                                        data: data.voted_3,
+                                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                        borderColor: 'rgba(75, 192, 192, 1)',
+                                        borderWidth: 1
+                                    },
+                                    {
+                                        label: 'Very Good (4)',
+                                        data: data.voted_4,
+                                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                                        borderColor: 'rgba(153, 102, 255, 1)',
+                                        borderWidth: 1
+                                    },
+                                    {
+                                        label: 'Excellent (5)',
+                                        data: data.voted_5,
+                                        backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                                        borderColor: 'rgba(255, 159, 64, 1)',
+                                        borderWidth: 1
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            precision: 0
+                                        }
+                                    }],
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    function AverageBarChart() {
+                        const ctx = document.getElementById('myChart3').getContext('2d');
+                        const myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                // Labels will be L1 to L6 and C1 to C8
+                                labels: ['L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8'],
+                                datasets: [
+                                    <?php 
+
+                                        $colors = [
+                                            'rgba(54, 162, 235, 0.2)', // Blue
+                                            'rgba(255, 99, 132, 0.2)', // Red
+                                            'rgba(75, 192, 192, 0.2)', // Teal
+                                            'rgba(153, 102, 255, 0.2)', // Purple
+                                            'rgba(255, 159, 64, 0.2)', // Orange
+                                            'rgba(255, 206, 86, 0.2)', // Yellow
+                                            'rgba(255, 99, 132, 0.2)', // Light Red
+                                            'rgba(54, 162, 235, 0.2)', // Light Blue
+                                            'rgba(75, 192, 192, 0.2)', // Light Teal
+                                            'rgba(153, 102, 255, 0.2)', // Light Purple
+                                            'rgba(255, 159, 64, 0.2)', // Light Orange
+                                            'rgba(255, 206, 86, 0.2)', // Light Yellow
+                                            'rgba(54, 162, 235, 0.2)', // Blue again
+                                            'rgba(255, 99, 132, 0.2)', // Red again
+                                            'rgba(75, 192, 192, 0.2)'  // Teal again
+                                        ];
+                                        // Dynamically generate datasets for each course
+                                        foreach ($data as $index => $item) {
+
+                                            $bgColor = $colors[$index % count($colors)];
+                                            $borderColor = str_replace('0.2', '1', $bgColor);
+
+                                            echo '{
+                                                label: "'.$item['course'].'", 
+                                                data: ['. 
+                                                    implode(',', [
+                                                        $item['avg_L1'],
+                                                        $item['avg_L2'],
+                                                        $item['avg_L3'],
+                                                        $item['avg_L4'],
+                                                        $item['avg_L5'],
+                                                        $item['avg_L6'],
+                                                        $item['avg_C1'],
+                                                        $item['avg_C2'],
+                                                        $item['avg_C3'],
+                                                        $item['avg_C4'],
+                                                        $item['avg_C5'],
+                                                        $item['avg_C6'],
+                                                        $item['avg_C7'],
+                                                        $item['avg_C8']
+                                                    ]) . '], 
+                                                backgroundColor: "'.$bgColor.'",
+                                                borderColor: "'.$borderColor.'",
+                                                borderWidth: 1
+                                            },';
+                                        }
+                                    ?>
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            min: 0
+                                        }
+                                    }]
+                                }
+                            }
+                        });
+                    }
                 </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="js/scripts.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-    <script src="js/datatables-simple-demo.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+                <script src="js/scripts.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+                <script src="js/datatables-simple-demo.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-    <script src="assets/demo/chart-area-demo.js"></script>
-    <script src="assets/demo/chart-bar-demo.js"></script>
-    <script src="assets/demo/chart-pie-demo.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+                <script src="assets/demo/chart-area-demo.js"></script>
+                <script src="assets/demo/chart-bar-demo.js"></script>
+                <script src="assets/demo/chart-pie-demo.js"></script>
 </body>
+
 </html>
