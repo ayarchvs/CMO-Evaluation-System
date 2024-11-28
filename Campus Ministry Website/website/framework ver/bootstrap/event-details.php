@@ -17,18 +17,6 @@
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-
-    <style>
-        .chart-container {
-            margin-bottom: 40px;
-        }
-
-        .chart-title {
-            text-align: center;
-            font-size: 24px;
-            margin-top: 20px;
-        }
-    </style>
 </head>
 
 <body class="sb-nav-fixed">
@@ -242,108 +230,147 @@
                     </div>
                 </div>
 
-                <!-- Bar Chart Container -->
-                <div class="chart-container">
-                    <h2 class="chart-title">Logistics</h2>
-                    <canvas id="myChart" width="300" height="100"></canvas>
+                <div>
+                    <canvas id="myChart"></canvas>
                 </div>
 
-                
 
-<script>
-    // Wait for the DOM to load
-    document.addEventListener('DOMContentLoaded', function () {
-        const chartData = extractTableData();  // Extract common data for both charts
-
-        // Create Bar Chart
-        createBarChart(chartData);
-
-       
-    });
-
-    // Common data extraction function
+                <script>
+    // Function to extract data from the table
     function extractTableData() {
-        const tableRows = document.querySelectorAll('#datatablesSimple3 tbody tr');
-        
-        const data = {
-            labels: [],
-            voted_1: [],
-            voted_2: [],
-            voted_3: [],
-            voted_4: [],
-            voted_5: []
-        };
-        
-        tableRows.forEach(row => {
-            const cells = row.querySelectorAll('td');
-            
-            data.labels.push(cells[0].textContent);  // Category (e.g., Process, Venue)
-            data.voted_1.push(parseInt(cells[1].textContent));  // Votes for "Poor"
-            data.voted_2.push(parseInt(cells[2].textContent));  // Votes for "Fair"
-            data.voted_3.push(parseInt(cells[3].textContent));  // Votes for "Good"
-            data.voted_4.push(parseInt(cells[4].textContent));  // Votes for "Very Good"
-            data.voted_5.push(parseInt(cells[5].textContent));  // Votes for "Excellent"
+        const labels = [];
+        const poorData = [];
+        const fairData = [];
+        const goodData = [];
+        const veryGoodData = [];
+        const excellentData = [];
+
+        // Get all rows of the table (skip the header row)
+        const rows = document.querySelectorAll("#datatablesSimple3 tbody tr");
+
+        rows.forEach(row => {
+            // Extract value (Process, Anchorperson, etc.)
+            const value = row.cells[0].textContent;
+
+            // Extract the ratings for each column (Poor, Fair, etc.)
+            const poor = parseInt(row.cells[1].textContent) || 0;
+            const fair = parseInt(row.cells[2].textContent) || 0;
+            const good = parseInt(row.cells[3].textContent) || 0;
+            const veryGood = parseInt(row.cells[4].textContent) || 0;
+            const excellent = parseInt(row.cells[5].textContent) || 0;
+
+            // Add data to arrays
+            labels.push(value);
+            poorData.push(poor);
+            fairData.push(fair);
+            goodData.push(good);
+            veryGoodData.push(veryGood);
+            excellentData.push(excellent);
         });
-        
-        return data;
+
+        return {
+            labels,
+            poorData,
+            fairData,
+            goodData,
+            veryGoodData,
+            excellentData
+        };
     }
 
-    // Create Bar Chart
-    function createBarChart(data) {
-        const ctx = document.getElementById('myChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: data.labels,
-                datasets: [
-                    {
-                        label: 'Poor (1)',
-                        data: data.voted_1,
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Fair (2)',
-                        data: data.voted_2,
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Good (3)',
-                        data: data.voted_3,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Very Good (4)',
-                        data: data.voted_4,
-                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                        borderColor: 'rgba(153, 102, 255, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Excellent (5)',
-                        data: data.voted_5,
-                        backgroundColor: 'rgba(255, 159, 64, 0.2)',
-                        borderColor: 'rgba(255, 159, 64, 1)',
-                        borderWidth: 1
+    // Function to create the chart
+    function createChart(data) {
+    const ctx = document.getElementById('myChart');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: data.labels,
+            datasets: [
+                {
+                    label: 'Poor (1)',
+                    data: data.poorData,
+                    backgroundColor: 'rgba(233, 30, 99, 0.8)' // Deep pink
+                },
+                {
+                    label: 'Fair (2)',
+                    data: data.fairData,
+                    backgroundColor: 'rgba(33, 150, 243, 0.8)' // Light blue
+                },
+                {
+                    label: 'Good (3)',
+                    data: data.goodData,
+                    backgroundColor: 'rgba(255, 193, 7, 0.8)' // Amber
+                },
+                {
+                    label: 'Very Good (4)',
+                    data: data.veryGoodData,
+                    backgroundColor: 'rgba(0, 200, 83, 0.8)' // Green accent
+                },
+                {
+                    label: 'Excellent (5)',
+                    data: data.excellentData,
+                    backgroundColor: 'rgba(156, 39, 176, 0.8)' // Purple
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            return `${context.dataset.label}: ${context.raw} votes`;
+                        }
                     }
-                ]
+                },
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 14 // Modern readable font size
+                        },
+                        color: '#333' // Dark grey for text
+                    }
+                }
             },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
+            scales: {
+                x: {
+                    stacked: true,
+                    grid: {
+                        display: false // Cleaner grid lines
+                    },
+                    ticks: {
+                        color: '#666', // Subtle grey for axis labels
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(200, 200, 200, 0.3)' // Light grey grid lines
+                    },
+                    ticks: {
+                        color: '#666', // Subtle grey for axis labels
+                        font: {
+                            size: 12
+                        }
                     }
                 }
             }
-        });
-    }
-    </script>
+        }
+    });
+}
+
+
+    // Get the data from the table and create the chart
+    window.onload = function() {
+        const tableData = extractTableData();
+        createChart(tableData);
+    };
+</script>
 
             </div>
         </main>
