@@ -104,6 +104,8 @@ include "config/config.php";
                         <i class="fas fa-table me-1"></i>
                         Records
                     </div>
+
+
                     <div class="card-body">
                         <table id="datatablesSimple1">
                             <thead>
@@ -188,6 +190,21 @@ include "config/config.php";
                         </table>
                     </div>
                 </div>
+
+                <div class="mb-3">
+                        <label for="courseFilter" class="form-label">Filter by Course:</label>
+                        <select id="courseFilter" class="form-select">
+                            <option value="">All Courses</option>
+                            <?php
+                            $courseQuery = "SELECT DISTINCT course FROM new_events WHERE Event_ID = $id ORDER BY course";
+                            $courseResult = mysqli_query($conn, $courseQuery);
+                            while ($courseRow = mysqli_fetch_assoc($courseResult)) {
+                                echo "<option value='" . htmlspecialchars($courseRow['course']) . "'>" . htmlspecialchars($courseRow['course']) . "</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+
 
                 <div class="card mb-4">
                     <div class="card-header">
@@ -313,8 +330,56 @@ include "config/config.php";
                 </div>
 
                 <script>
-                    function extractTableData(id) {
+                    let myChart1, myChart2;
 
+                    function filterDataByCourse(course) {
+                        const tables = ['datatablesSimple1', 'datatablesSimple3', 'datatablesSimple4'];
+                        
+                        tables.forEach(tableId => {
+                            const table = document.getElementById(tableId);
+                            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+                            
+                            for (let i = 0; i < rows.length; i++) {
+                                if (tableId === 'datatablesSimple1') {
+                                    const courseCell = rows[i].getElementsByTagName('td')[2]; // Assuming course is in the third column
+                                    if (courseCell) {
+                                        if (course === '' || courseCell.textContent === course) {
+                                            rows[i].style.display = '';
+                                        } else {
+                                            rows[i].style.display = 'none';
+                                        }
+                                    }
+                                } else {
+                                    // For logistics and content tables, we'll update their data in updateCharts
+                                    rows[i].style.display = '';
+                                }
+                            }
+                        });
+
+                        // Update charts
+                        updateCharts(course);
+                    }
+
+                    function updateCharts(course) {
+                        const logistics = '#datatablesSimple3 tbody tr';
+                        const content = '#datatablesSimple4 tbody tr';
+                        const logischart = 'myChart1';
+                        const contentchart = 'myChart2';
+
+                        // Filter data for charts
+                        const chartDataLogis = extractTableData(logistics, course);
+                        const chartDataContent = extractTableData(content, course);
+
+                        // Update existing charts with new data
+                        updateBarChart(myChart1, chartDataLogis);
+                        updateBarChart(myChart2, chartDataContent);
+
+                        // Update logistics and content tables
+                        updateTable('datatablesSimple3', chartDataLogis);
+                        updateTable('datatablesSimple4', chartDataContent);
+                    }
+
+                    function extractTableData(id, course) {
                         const labels = [];
                         const poorData = [];
                         const fairData = [];
@@ -328,11 +393,23 @@ include "config/config.php";
                             const value = row.cells[0].textContent;
 
                             // Extract the ratings for each column (Poor, Fair, etc.)
-                            const poor = parseInt(row.cells[1].textContent) || 0;
-                            const fair = parseInt(row.cells[2].textContent) || 0;
-                            const good = parseInt(row.cells[3].textContent) || 0;
-                            const veryGood = parseInt(row.cells[4].textContent) || 0;
-                            const excellent = parseInt(row.cells[5].textContent) || 0;
+                            let poor = 0, fair = 0, good = 0, veryGood = 0, excellent = 0;
+
+                            // Filter data based on the selected course
+                            const dataRows = document.querySelectorAll('#datatablesSimple1 tbody tr');
+                            dataRows.forEach(dataRow => {
+                                if (course === '' || dataRow.cells[2].textContent === course) {
+                                    const columnIndex = Array.from(row.parentNode.children).indexOf(row) + 4; // +4 because ratings start from the 5th column
+                                    const rating = parseInt(dataRow.cells[columnIndex].textContent);
+                                    switch(rating) {
+                                        case 1: poor++; break;
+                                        case 2: fair++; break;
+                                        case 3: good++; break;
+                                        case 4: veryGood++; break;
+                                        case 5: excellent++; break;
+                                    }
+                                }
+                            });
 
                             labels.push(value);
                             poorData.push(poor);
@@ -352,10 +429,9 @@ include "config/config.php";
                         };
                     }
 
-                    // Create Bar Chart
-                    function createBarChart(data, chart) {
-                        const ctx = document.getElementById(chart).getContext('2d');
-                        new Chart(ctx, {
+                    function createBarChart(data, chartId) {
+                        const ctx = document.getElementById(chartId).getContext('2d');
+                        return new Chart(ctx, {
                             type: 'bar',
                             data: {
                                 labels: data.labels,
@@ -363,32 +439,33 @@ include "config/config.php";
                                     {
                                         label: 'Poor (1)',
                                         data: data.poorData,
-                                        backgroundColor: 'rgba(233, 30, 99, 0.8)' // Deep pink
+                                        backgroundColor: 'rgba(233, 30, 99, 0.8)'
                                     },
                                     {
                                         label: 'Fair (2)',
                                         data: data.fairData,
-                                        backgroundColor: 'rgba(33, 150, 243, 0.8)' // Light blue
+                                        backgroundColor: 'rgba(33, 150, 243, 0.8)'
                                     },
                                     {
                                         label: 'Good (3)',
                                         data: data.goodData,
-                                        backgroundColor: 'rgba(255, 193, 7, 0.8)' // Amber
+                                        backgroundColor: 'rgba(255, 193, 7, 0.8)'
                                     },
                                     {
                                         label: 'Very Good (4)',
                                         data: data.veryGoodData,
-                                        backgroundColor: 'rgba(0, 200, 83, 0.8)' // Green accent
+                                        backgroundColor: 'rgba(0, 200, 83, 0.8)'
                                     },
                                     {
                                         label: 'Excellent (5)',
                                         data: data.excellentData,
-                                        backgroundColor: 'rgba(156, 39, 176, 0.8)' // Purple
+                                        backgroundColor: 'rgba(156, 39, 176, 0.8)'
                                     }
                                 ]
                             },
                             options: {
                                 responsive: true,
+                                maintainAspectRatio: false,
                                 plugins: {
                                     tooltip: {
                                         callbacks: {
@@ -401,25 +478,20 @@ include "config/config.php";
                                         position: 'top',
                                         labels: {
                                             font: {
-                                                size: 14 // Modern readable font size
+                                                size: 14
                                             },
-                                            color: '#333' // Dark grey for text
+                                            color: '#333'
                                         }
                                     }
                                 },
                                 scales: {
-                                    yAxes: [{
-                                        ticks: {
-                                            precision: 0
-                                        }
-                                    }],
                                     x: {
                                         stacked: true,
                                         grid: {
-                                            display: false // Cleaner grid lines
+                                            display: false
                                         },
                                         ticks: {
-                                            color: '#666', // Subtle grey for axis labels
+                                            color: '#666',
                                             font: {
                                                 size: 12
                                             },
@@ -429,34 +501,69 @@ include "config/config.php";
                                         stacked: true,
                                         beginAtZero: true,
                                         grid: {
-                                            color: 'rgba(200, 200, 200, 0.3)' // Light grey grid lines
+                                            color: 'rgba(200, 200, 200, 0.3)'
                                         },
                                         ticks: {
-                                            color: '#666', // Subtle grey for axis labels
+                                            color: '#666',
                                             font: {
                                                 size: 12
                                             },
+                                            precision: 0
                                         }
                                     }
-                                }
+                                },
+                                animation: {
+                                    duration: 0 // general animation time
+                                },
+                                hover: {
+                                    animationDuration: 0 // duration of animations when hovering an item
+                                },
+                                responsiveAnimationDuration: 0 // animation duration after a resize
                             }
                         });
                     }
 
+                    function updateBarChart(chart, newData) {
+                        chart.data.labels = newData.labels;
+                        chart.data.datasets[0].data = newData.poorData;
+                        chart.data.datasets[1].data = newData.fairData;
+                        chart.data.datasets[2].data = newData.goodData;
+                        chart.data.datasets[3].data = newData.veryGoodData;
+                        chart.data.datasets[4].data = newData.excellentData;
+                        chart.update('none'); // Update without animation
+                    }
+
+                    function updateTable(tableId, data) {
+                        const table = document.getElementById(tableId);
+                        const tbody = table.getElementsByTagName('tbody')[0];
+                        const rows = tbody.getElementsByTagName('tr');
+
+                        for (let i = 0; i < rows.length; i++) {
+                            const cells = rows[i].getElementsByTagName('td');
+                            cells[1].textContent = data.poorData[i];
+                            cells[2].textContent = data.fairData[i];
+                            cells[3].textContent = data.goodData[i];
+                            cells[4].textContent = data.veryGoodData[i];
+                            cells[5].textContent = data.excellentData[i];
+                        }
+                    }
 
                     window.onload = function() {
+                        const courseFilter = document.getElementById('courseFilter');
+                        courseFilter.addEventListener('change', function() {
+                            filterDataByCourse(this.value);
+                        });
+
+                        // Initial chart creation
                         const logistics = '#datatablesSimple3 tbody tr';
                         const content = '#datatablesSimple4 tbody tr';
-
                         const logischart = 'myChart1';
                         const contentchart = 'myChart2';
-                        const chartDataLogis = extractTableData(logistics); // Extract common data for both charts
-                        const chartDataContent = extractTableData(content);
-                        // Create Bar Chart
-                        createBarChart(chartDataLogis, logischart);
-                        createBarChart(chartDataContent, contentchart);
+                        const chartDataLogis = extractTableData(logistics, '');
+                        const chartDataContent = extractTableData(content, '');
+                        myChart1 = createBarChart(chartDataLogis, logischart);
+                        myChart2 = createBarChart(chartDataContent, contentchart);
                     };
-
                 </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
