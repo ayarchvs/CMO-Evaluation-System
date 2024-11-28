@@ -133,7 +133,7 @@ $(document).ready(function() {
 
     // ================= For Update Event ===================
     // Open the modal and populate fields when "Update" button is clicked
-    $('.update-btn').on('click', function () {
+    $('.event-update-btn').on('click', function () {
         const eventId = $(this).data('id');
         console.log("Clicked Update Btn: ", eventId);
 
@@ -154,6 +154,7 @@ $(document).ready(function() {
                         $('#updateEventType').val(data.eventData.E_Type); // Set Event Type based on the fetched data
                         $('#updateEventReligion').val(data.eventData.E_Religion); // Set Religion based on the fetched data
                         $('#updateEventLocation').val(data.eventData.E_Location);
+                        $('#updateEventCourse').val(data.eventData.E_Course);
     
                         // Show the modal
                         $('#updateEventModal').modal('show');
@@ -184,7 +185,8 @@ $(document).ready(function() {
             eventDay: $('#updateEventDay').val(),
             eventType: $('#updateEventType').val(),
             religion: $('#updateEventReligion').val(),
-            location: $('#updateEventLocation').val()
+            location: $('#updateEventLocation').val(),
+            course: $('#updateEventCourse').val()
         };
 
         // Send update request via AJAX
@@ -200,8 +202,9 @@ $(document).ready(function() {
                     console.log("Parsed JSON data:", data);
             
                     if (data.status === 'success') {
-                        alert('Staff Details updated successfully!');
+                        alert('Event Details updated successfully!');
                         $('#updateStaffModal').modal('hide');
+                        location.reload();
                     } else {
                         alert('Failed to update Staff Details: ' + data.message);
                     }
@@ -217,16 +220,4 @@ $(document).ready(function() {
             }
         });
     });
-
-
-
-
-
-
-
-
-
-
-
-
 });

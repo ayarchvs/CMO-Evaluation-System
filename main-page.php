@@ -90,7 +90,7 @@
                                         <td>
                                             <button class="btn btn-primary view-btn" data-id="<?= $row['Event_ID'] ?>">View</button>
                                             <?php if (can_manage_event($row['E_Type'])): ?>
-                                                <button class="btn btn-warning update-btn" data-id="<?= $row['Event_ID'] ?>">Update</button>
+                                                <button class="btn btn-warning event-update-btn" data-id="<?= $row['Event_ID'] ?>">Update</button>
                                                 <button class="btn btn-danger delete-btn" data-id="<?= $row['Event_ID'] ?>">Delete</button>
                                             <?php endif; ?>
                                         </td>
@@ -174,18 +174,23 @@
                         <div class="form-floating mb-3">
                             <select class="form-control" id="updateEventReligion" name="religion" aria-label="Religion" required>
                                 <option value="" disabled selected>Select</option>
-                                <option value="Roman Catholic"> Roman Catholic</option>
+                                <option value="Christian">Christian</option>
                                 <option value="Muslim">Muslim</option>
-                                <option value="Non-Christian">Non-Christian</option>
+                                <option value="Non-Christian">Christians of Other Denominations</option>
                             </select>
                             <label for="updateEventReligion">Religion</label>
                         </div>
 
-
-                        <div class="mb-3">
-                            <label for="updateEventLocation" class="form-label">Location</label>
-                            <input type="text" class="form-control" id="updateEventLocation" name="location" required>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="updateEventCourse" name="course" placeholder="Course" required />
+                            <label for="updateEventCourse">Course</label>
                         </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="updateEventLocation" name="location" placeholder="Location" required />
+                            <label for="updateEventLocation">Location</label>
+                        </div>
+
                         <button type="submit" class="btn btn-primary">Update Event</button>
                     </form>
                 </div>
