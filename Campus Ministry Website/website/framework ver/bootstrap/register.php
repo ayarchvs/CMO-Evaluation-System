@@ -120,13 +120,11 @@ include("config/config.php");
     </head>
     <body>
         <div class="register-container">
-<<<<<<< HEAD
             <div style="background:white; border-radius:50%; width:150px; height:150px; display:flex; justify-content:center; align-items:center; margin-bottom: 20px;">
                 <img src="assets/img/CMOlogo.png" alt="Logo" style="max-width:80%; max-height:80%; object-fit:contain;">
             </div>
             <h1 class="text-center text-white mb-4">Campus Ministry Office</h1>
-=======
->>>>>>> b8de35d23cafa32d6cd2ec9d726150d1c77c2e3d
+
             <div class="card">
                 <div class="card-body">
                     <h3 class="text-center font-weight-light my-4">Create Account</h3>
@@ -168,10 +166,7 @@ include("config/config.php");
                         <div class="form-floating mb-3">
                             <select class="form-control" id="inputType" name="inputType" required>
                                 <option value="" disabled selected>Select</option>
-<<<<<<< HEAD
                                 <option value="Developer">Developer</option>
-=======
->>>>>>> b8de35d23cafa32d6cd2ec9d726150d1c77c2e3d
                                 <option value="Admin">Admin</option>
                                 <option value="Retreat">Retreat</option>
                                 <option value="Recollection 01">Recollection 01</option>
