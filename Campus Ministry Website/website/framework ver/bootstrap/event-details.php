@@ -68,7 +68,6 @@ include "config/config.php";
                         $Religion = $row['E_Religion'];
                         $Location = $row['E_Location'];
                         $Course = $row['E_Course'];
-                        $filePath = $row['E_file_ref'];
 
                         echo
                         '

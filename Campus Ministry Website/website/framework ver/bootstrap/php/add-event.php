@@ -5,7 +5,6 @@ session_start();
 
 require '../phpspreadsheet/vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -34,114 +33,100 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Handle file upload
-    $fileRef = null;
     if (isset($_FILES['excelFile']) && $_FILES['excelFile']['error'] == 0) {
-        //Determine the upload folder based on the event type
-        $baseUploadDir = '../Evaluation Forms/';
-        $eventFolders = [
-            "Retreat" => "Retreat/",
-            "Recollection 01" => "Recollection 01/",
-            "Recollection 02" => "Recollection 02/",
-        ];
+        $file = $_FILES['excelFile']['tmp_name'];
+        $fileType = strtolower(pathinfo($_FILES['excelFile']['name'], PATHINFO_EXTENSION));
 
-        if (array_key_exists($eventType, $eventFolders)) {
-            $uploadDir = $baseUploadDir . $eventFolders[$eventType];
+        // Determine file processing method based on file type
+        if ($fileType == 'xlsx') {
+            // Process Excel (XLSX) file
+            $reader = new Xlsx();
+        } elseif ($fileType == 'csv') {
+            // Process CSV file
+            $reader = IOFactory::createReader('Csv');
         } else {
-            echo "Invalid event type.";
+            echo "Invalid file type. Only .xlsx and .csv files are allowed.";
             exit;
         }
 
-        // Ensure the directory exists
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
-        $fileRef = $uploadDir . basename($_FILES['excelFile']['name']);
-
-        if (!move_uploaded_file($_FILES['excelFile']['tmp_name'], $fileRef)) {
-            echo "File upload failed.";
-            exit;
-        }
-
-        $sql = "INSERT INTO event (Staff_ID, E_Type, E_Year, E_Month, E_Day, E_Course, E_Religion, E_Location, E_file_ref) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO event (Staff_ID, E_Type, E_Year, E_Month, E_Day, E_Course, E_Religion, E_Location) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("isiiissss", $staff_id, $eventType, $eventYear, $eventMonth, $eventDay, $eventCourse, $religion, $location, $fileRef);
+        $stmt->bind_param("isiiisss", $staff_id, $eventType, $eventYear, $eventMonth, $eventDay, $eventCourse, $religion, $location);
 
         if ($stmt->execute()) {
             echo "success";
             $event_id = $conn->insert_id;
 
-            if ($fileRef) {
-                $reader = new Xlsx();
-                try {
-                    $spreadsheet = $reader->load($fileRef);
-                    $worksheet = $spreadsheet->getActiveSheet();
-                    $worksheet_arr = $worksheet->toArray();
-                    
-                    unset($worksheet_arr[0]);
-        
-                    foreach ($worksheet_arr as $row) {
-                        $lastName = $row[2]; 
-                        $firstName = $row[3];  
-                        $studentID = $row[4]; 
-                        $course = $row[6]; 
-                        $venue = $row[7]; 
-                        $gender = $row[8]; 
-                                               
-                        $L1 = $row[11];
-                        $L2 = $row[13];
-                        $L3 = $row[15];
-                        $L4 = $row[17];
-                        $L5 = $row[19];
-                        $L6 = $row[21];
-                        $C1 = $row[23];
-                        $C2 = $row[25];
-                        $C3 = $row[27];
-                        $C4 = $row[29];
-                        $C5 = $row[31];
-                        $C6 = $row[33];
-                        $C7 = $row[35];
-                        $C8 = $row[37];
-        
-                        $sql = "INSERT INTO new_events 
-                        (
-                        lastname,
-                        firstname,
-                        student_id,
-                        course,
-                        venue,  
-                        gender, 
-                        Event_ID,
-                        L1, L2, L3, L4, L5, L6,
-                        C1, C2, C3, C4, C5, C6, C7, C8
-                        ) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param(
-                            "ssisssiiiiiiiiiiiiiii", 
-                            $lastName, 
-                            $firstName,
-                            $studentID, 
-                            $course, 
-                            $venue, 
-                            $gender,
-                            $event_id,
-                            $L1, $L2, $L3, $L4, $L5, $L6,
-                            $C1, $C2, $C3, $C4, $C5, $C6, $C7, $C8
-                        );
-                        $stmt->execute();
-                    }
-                } catch (Exception $e) {
-                    echo 'Error reading file: ',  $e->getMessage();
-                    exit;
+            // Read the file and insert data
+            try {
+                $spreadsheet = $reader->load($file);
+                $worksheet = $spreadsheet->getActiveSheet();
+                $worksheet_arr = $worksheet->toArray();
+                
+                unset($worksheet_arr[0]); // Remove header row
+
+                foreach ($worksheet_arr as $row) {
+                    $lastName = $row[2]; 
+                    $firstName = $row[3];  
+                    $studentID = $row[4]; 
+                    $course = $row[6]; 
+                    $venue = $row[7]; 
+                    $gender = $row[8]; 
+                    $L1 = $row[11];
+                    $L2 = $row[13];
+                    $L3 = $row[15];
+                    $L4 = $row[17];
+                    $L5 = $row[19];
+                    $L6 = $row[21];
+                    $C1 = $row[23];
+                    $C2 = $row[25];
+                    $C3 = $row[27];
+                    $C4 = $row[29];
+                    $C5 = $row[31];
+                    $C6 = $row[33];
+                    $C7 = $row[35];
+                    $C8 = $row[37];
+
+                    $sql = "INSERT INTO new_events 
+                    (
+                    lastname,
+                    firstname,
+                    student_id,
+                    course,
+                    venue,  
+                    gender, 
+                    Event_ID,
+                    L1, L2, L3, L4, L5, L6,
+                    C1, C2, C3, C4, C5, C6, C7, C8
+                    ) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param(
+                        "ssisssiiiiiiiiiiiiiii", 
+                        $lastName, 
+                        $firstName,
+                        $studentID, 
+                        $course, 
+                        $venue, 
+                        $gender,
+                        $event_id,
+                        $L1, $L2, $L3, $L4, $L5, $L6,
+                        $C1, $C2, $C3, $C4, $C5, $C6, $C7, $C8
+                    );
+                    $stmt->execute();
                 }
+            } catch (Exception $e) {
+                echo 'Error reading file: ',  $e->getMessage();
+                exit;
             }
         } else {
             echo "Error: " . $stmt->error;
         }
+    } else {
+        echo "No file uploaded or file upload error.";
     }
-    
+
     $stmt->close();
     $conn->close();
 } else {

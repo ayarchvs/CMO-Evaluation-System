@@ -17,7 +17,7 @@ window.addEventListener('DOMContentLoaded', event => {
     if (datatablesSimple3) {
         new simpleDatatables.DataTable(datatablesSimple3);
     }
-    if (datatablesSimple3) {
+    if (datatablesSimple4) {
         new simpleDatatables.DataTable(datatablesSimple4);
     }
 });
