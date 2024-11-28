@@ -95,7 +95,6 @@ $htmlContent = <<<HTML
                                     <div class="form-floating mb-3">
                                         <select class="form-control" id="updateStaffType" name="type" required>
                                             <option value="" disabled selected>Select Type</option>
-                                            <option value="Developer">Developer</option>
                                             <option value="Admin">Admin</option>
                                             <option value="Retreat">Retreat</option>
                                             <option value="Recollection 01">Recollection 01</option>
