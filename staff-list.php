@@ -1,10 +1,11 @@
 <?php
 
 include "config/config.php"; 
+include("access_control.php");
 
-// Query to fetch staff data from the 'staff' table
-$query = "SELECT * FROM staff";
-$result = mysqli_query($conn, $query);
+$stmt2 = $conn->prepare("SELECT * FROM Staff"); // Changed to $stmt2
+$stmt2->execute();
+$result2 = $stmt2->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -21,6 +22,7 @@ $result = mysqli_query($conn, $query);
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     </head>
     <body class="sb-nav-fixed">
+
     <?php include "modules/navigation-panel.php"; ?>
 
         <div id="layoutSidenav_content">
@@ -54,18 +56,18 @@ $result = mysqli_query($conn, $query);
                                             </thead>
                                             <tbody>
                                                 <?php
-                                                if (mysqli_num_rows($result) > 0) {
+                                                if (mysqli_num_rows($result2) > 0) {
                                                     $counter = 1;  
-                                                    while ($row = mysqli_fetch_assoc($result)) {
+                                                    while ($row = $result2->fetch_assoc()) { // Changed to $result2
                                                         echo "<tr>";
                                                         echo "<td>" . $counter . "</td>";
                                                         echo "<td>" . $row['S_Name'] . "</td>";  
                                                         echo "<td>" . $row['S_Type'] . "</td>";  
                                                         echo "<td>" . $row['S_Email'] . "</td>"; 
                                                         echo "<td>
-                                                                <button class='btn btn-primary btn-sm staff-update-btn'data-id=\"" . $row['Staff_ID'] . "\">Update</button> 
+                                                                <button class='btn btn-primary btn-sm staff-update-btn' data-id=\"" . $row['Staff_ID'] . "\">Update</button> 
                                                                 <button class='btn btn-danger btn-sm staff-delete-btn' data-id=\"" . $row['Staff_ID'] . "\">Delete</button>
-                                                            </td>";
+                                                              </td>";
                                                         echo "</tr>";
                                                         $counter++;
                                                     }

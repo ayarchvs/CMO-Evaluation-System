@@ -1,9 +1,20 @@
 <?php
+include "config/config.php";
 session_start();
-$username = $_SESSION['username'];
-$upperCase = strtoupper($username);
+
 $staffID = $_SESSION['Staff_ID'];
 $admin = $_SESSION['is_admin'];
+
+$sql = "SELECT S_Name FROM Staff WHERE Staff_ID = ?";
+$stmt1 = $conn->prepare($sql); // Changed to $stmt1
+$stmt1->bind_param("i", $staffID);
+$stmt1->execute();
+$result1 = $stmt1->get_result();
+if ($result1->num_rows > 0) {
+    $row = $result1->fetch_assoc();
+    $staffName = strtoupper($row['S_Name']);
+}
+$stmt1->close();
 
 $adminPermission = '';
 if ($admin != 0) {
@@ -18,8 +29,29 @@ if ($admin != 0) {
     </a>
     ADMINPERMISSION;
 }
-
 $htmlContent = <<<HTML
+
+            <head>
+                <link rel="preconnect" href="https://fonts.googleapis.com">
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+                <!-- Add this CSS within the <head> section -->
+                <style>
+
+                    /* Adding hover effect for navbar items */
+                    .nav-link {
+                        transition: background-color 0.3s ease, color 0.3s ease;
+                    }
+
+                    /* When hovering over the nav items */
+                    .nav-link:hover {
+                        background-color: #0056b3; /* Change background color on hover */
+                        color: white; /* Change text color on hover */
+                    }
+                </style>
+            </head>
+
             <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
                 <!-- Navbar Brand-->
                 <a class="navbar-brand ps-3" href="main-page.php">Campus Ministry</a>
@@ -29,7 +61,7 @@ $htmlContent = <<<HTML
                 <div class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                     <div style="color:white; ">
                         <a class="nav-link">
-                            Welcome $upperCase!
+                            Welcome $staffName !
                         </a>
                     </div>
                 </div>
@@ -138,4 +170,5 @@ $htmlContent = <<<HTML
             HTML;
 echo $htmlContent;
 ?>
+
 </html>
